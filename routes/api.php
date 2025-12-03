@@ -143,24 +143,6 @@ Route::prefix('v0.1')->group(function () {
         Route::get('/substitutions/{ingredientId}', [AIController::class, 'getSmartSubstitutions']);
     });
 
-    // Webhook routes (for n8n - no auth required, but should use webhook secret)
-    Route::prefix('webhooks')->group(function () {
-        Route::post('/meal-plan-updated', [WebhookController::class, 'mealPlanUpdated']);
-    });
-
-    // N8N Integration routes (use API key authentication instead of JWT)
-    Route::prefix('n8n')->group(function () {
-        // WF1: Daily Expiry Alerts
-        Route::get('/households/{householdId}/pantry/expiring', [N8nController::class, 'getExpiringItems']);
-        
-        // WF2: Weekly Meal Plan Draft
-        Route::get('/households/{householdId}/pantry', [N8nController::class, 'getPantryItems']);
-        Route::get('/households/{householdId}/recipes', [N8nController::class, 'getRecipes']);
-        Route::post('/households/{householdId}/meal-plans', [N8nController::class, 'createMealPlan']);
-        Route::post('/households/{householdId}/meal-plans/{weekId}/meals', [N8nController::class, 'addMealToPlan']);
-        
-        // Notification endpoint
-        Route::post('/send-notification', [N8nNotificationController::class, 'sendNotification']);
-    });
+   
 });
 
