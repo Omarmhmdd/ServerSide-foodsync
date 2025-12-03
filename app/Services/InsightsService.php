@@ -8,6 +8,7 @@ use App\Models\Week;
 use App\Models\Meal;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class InsightsService
 {
@@ -146,7 +147,7 @@ class InsightsService
                 return trim($summary);
             }
         } catch (\Exception $e) {
-            \Log::error('AI Insights Summary Error: ' . $e->getMessage());
+            Log::error('AI Insights Summary Error: ' . $e->getMessage());
         }
 
         return null;

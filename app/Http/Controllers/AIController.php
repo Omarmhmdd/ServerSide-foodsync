@@ -12,6 +12,15 @@ use App\Services\PantryService;
 use App\Models\Ingredient;
 use App\Models\Unit;
 use App\Models\Inventory;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
+use Exception;
+use App\Models\Recipe;
+
+
+
+
+
 
 class AIController extends Controller
 {
@@ -88,7 +97,7 @@ class AIController extends Controller
                     $created['ingredients']++;
                 }
             } catch (\Exception $e) {
-                \Log::error('Failed to create ingredient: ' . $e->getMessage());
+                Log::error('Failed to create ingredient: ' . $e->getMessage());
             }
         }
 
@@ -140,7 +149,7 @@ class AIController extends Controller
                     $created['recipes']++;
                 }
             } catch (\Exception $e) {
-                \Log::error('Failed to create recipe: ' . $e->getMessage());
+                Log::error('Failed to create recipe: ' . $e->getMessage());
             }
         }
 
@@ -157,7 +166,7 @@ class AIController extends Controller
                 ]);
                 $created['pantry_items']++;
             } catch (\Exception $e) {
-                \Log::error('Failed to create pantry item: ' . $e->getMessage());
+                Log::error('Failed to create pantry item: ' . $e->getMessage());
             }
         }
 
@@ -167,9 +176,7 @@ class AIController extends Controller
         ]);
     }
 
-    /**
-     * Get recipe suggestions from pantry (enhanced with full recipe details)
-     */
+   
     function getRecipeSuggestionsFromPantry(Request $request)
     {
         $user = Auth::user();
@@ -184,8 +191,10 @@ class AIController extends Controller
             $suggestions = $this->aiService->getRecipeSuggestionsFromPantry($user->household_id, $limit);
             return $this->responseJSON(['suggestions' => $suggestions, 'source' => 'ai']);
         }
-
-        $recipes = \App\Services\RecipeService::getSuggestionsFromPantry($user->household_id, $limit);
+         
+      //  $recipes = $this->recipeService->getSuggestionsFromPantry($user->household_id, $limit);
+      //  return $this->responseJSON($recipes);
+        $recipes = $this->recipeService->getSuggestionsFromPantry($user->household_id, $limit);
         return $this->responseJSON($recipes);
     }
 

@@ -8,12 +8,9 @@ use Carbon\Carbon;
 
 class MealPlanService
 {
-    private $webhookService;
+    
 
-    public function __construct(WebhookService $webhookService = null)
-    {
-        $this->webhookService = $webhookService ?? new WebhookService();
-    }
+   
     function getWeeklyPlan($householdId, $weekStartDate = null)
     {
         if (!$weekStartDate) {
@@ -67,8 +64,7 @@ class MealPlanService
             $existingMeal->save();
             $existingMeal->load('recipe');
             
-            // Trigger webhook for n8n (WF3) when meal is updated
-            $this->webhookService->triggerMealPlanUpdated($weekId, $householdId);
+            
             
             return $existingMeal;
         }
@@ -82,8 +78,7 @@ class MealPlanService
 
         $meal->load('recipe');
         
-        // Trigger webhook for n8n (WF3)
-        $this->webhookService->triggerMealPlanUpdated($weekId, $householdId);
+       
         
         return $meal;
     }
@@ -108,10 +103,8 @@ class MealPlanService
 
         $deleted = $meal->delete();
         
-        // Trigger webhook for n8n (WF3) if meal was deleted
-        if ($deleted) {
-            $this->webhookService->triggerMealPlanUpdated($weekId, $householdId);
-        }
+      
+        
         
         return $deleted;
     }

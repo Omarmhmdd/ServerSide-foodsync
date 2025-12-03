@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Inventory;
 use App\Models\Recipe;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AIService
 {
@@ -59,7 +60,7 @@ class AIService
                 return array_slice($recipeNames, 0, $limit);
             }
         } catch (\Exception $e) {
-            \Log::error('AI Service Error: ' . $e->getMessage());
+            Log::error('AI Service Error: ' . $e->getMessage());
         }
 
         return $this->getBasicSuggestions($householdId, $limit);
@@ -109,7 +110,7 @@ class AIService
                 return ['substitution' => trim($suggestion)];
             }
         } catch (\Exception $e) {
-            \Log::error('AI Service Error: ' . $e->getMessage());
+            Log::error('AI Service Error: ' . $e->getMessage());
         }
 
         return [];
@@ -220,7 +221,7 @@ Return ONLY valid JSON, no other text.";
                 'recipes' => $recipes,
             ];
         } catch (\Exception $e) {
-            \Log::error('AI Seed Data Generation Error: ' . $e->getMessage());
+            Log::error('AI Seed Data Generation Error: ' . $e->getMessage());
             return $this->getFallbackSeedData($householdId);
         }
     }

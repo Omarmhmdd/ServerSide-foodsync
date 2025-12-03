@@ -10,6 +10,7 @@ use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use App\Services\PantryService;
 use App\Services\ShoppingListService;
+use Illuminate\Support\Facades\Log;
 
 class RecipeService
 {
@@ -119,7 +120,7 @@ class RecipeService
                                 'location' => null,
                             ]);
                         } catch (\Exception $e) {
-                            \Log::warning('Failed to add ingredient to pantry when creating recipe: ' . $e->getMessage());
+                            Log::warning('Failed to add ingredient to pantry when creating recipe: ' . $e->getMessage());
                         }
 
                         // Automatically add ingredient to shopping list
@@ -156,7 +157,7 @@ class RecipeService
                                 );
                             }
                         } catch (\Exception $e) {
-                            \Log::warning('Failed to add ingredient to shopping list when creating recipe: ' . $e->getMessage());
+                            Log::warning('Failed to add ingredient to shopping list when creating recipe: ' . $e->getMessage());
                         }
                     }
                 }
@@ -185,7 +186,7 @@ class RecipeService
             
             return $recipe;
         } catch (\Exception $e) {
-            \Log::error('Recipe creation error: ' . $e->getMessage());
+            Log::error('Recipe creation error: ' . $e->getMessage());
             throw $e;
         }
     }
