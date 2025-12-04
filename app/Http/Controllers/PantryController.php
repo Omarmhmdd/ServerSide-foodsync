@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\PantryService;
+
 
 class PantryController extends Controller
 {
@@ -239,5 +241,11 @@ class PantryController extends Controller
         $result = $this->pantryService->mergeDuplicates($user->household_id);
         return $this->responseJSON($result, "success");
     }
+    public function getExpiringSoonPublic()
+{
+    return Inventory::whereDate('expiry_date', '<=', now()->addDays(3))
+        ->orderBy('expiry_date')
+        ->get();
+}
 }
 
