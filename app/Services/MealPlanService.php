@@ -40,6 +40,7 @@ class MealPlanService
             $week->save();
         }
 
+
         $week->load(['meals.recipe']);
         return $week;
     }

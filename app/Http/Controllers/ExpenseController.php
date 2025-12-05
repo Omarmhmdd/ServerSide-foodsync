@@ -21,7 +21,7 @@ class ExpenseController extends Controller
         if (!$user->household_id) {
             return $this->responseJSON([], "failure", status_code: 404);
         }
-
+        
         $expenses = $this->expenseService->getAll($user->household_id);
         return $this->responseJSON($expenses);
     }

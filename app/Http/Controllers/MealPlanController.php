@@ -22,11 +22,11 @@ class MealPlanController extends Controller
             return $this->responseJSON(null, "failure", 404);
         }
 
-        // Accept both 'weekStartDate' and 'start_date' query parameters
+        
         $weekStartDate = $request->get('weekStartDate') ?? $request->get('start_date');
         $week = $this->mealPlanService->getWeeklyPlan($user->household_id, $weekStartDate);
         
-        // Return empty week structure instead of 404 if week doesn't exist
+        
         if (!$week) {
             return $this->responseJSON([
                 'id' => null,
@@ -56,10 +56,9 @@ class MealPlanController extends Controller
 
     function addMeal(Request $request, $weekId)
     {
-        // Accept both 'slot' and 'meal_type' field names
+        
         $slot = $request->input('slot') ?? $request->input('meal_type');
         
-        // Handle day as integer or string (e.g., "monday" -> 1)
         $day = $request->input('day');
         $dayValue = $day;
         if (is_string($day)) {
@@ -75,7 +74,7 @@ class MealPlanController extends Controller
             return $this->responseJSON(null, "failure", 400);
         }
 
-        // Custom validation: ensure at least one of slot or meal_type is provided
+      
         if (!$slot) {
             return response()->json([
                 'status' => 'failure',
@@ -84,7 +83,7 @@ class MealPlanController extends Controller
             ], 422);
         }
 
-        // Validate recipe exists and belongs to household
+        
         $recipe = \App\Models\Recipe::where('id', $request->recipe_id)
             ->where('household_id', $user->household_id)
             ->first();
@@ -105,7 +104,7 @@ class MealPlanController extends Controller
             'recipe_id.required' => 'Recipe ID is required',
         ]);
 
-        // Validate slot value
+      
         if (!in_array($slot, ['breakfast', 'lunch', 'dinner', 'snack'])) {
             return response()->json([
                 'status' => 'failure',
@@ -114,7 +113,7 @@ class MealPlanController extends Controller
             ], 422);
         }
 
-        // Validate day value (0-6)
+       
         $finalDay = (int)$dayValue;
         if ($finalDay < 0 || $finalDay > 6) {
             return response()->json([

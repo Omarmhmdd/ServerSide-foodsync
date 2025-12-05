@@ -20,10 +20,10 @@ class InitializeSession
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Force session driver to array
+        
         config(['session.driver' => 'array']);
         
-        // Initialize session store if not already set
+       
         if (!$request->hasSession()) {
             $sessionManager = app('session');
             $sessionStore = $sessionManager->driver('array');

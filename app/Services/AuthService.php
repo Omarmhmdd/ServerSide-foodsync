@@ -18,7 +18,7 @@ class AuthService
         }
 
         $user = Auth::guard('api')->user();
-        // Load role and household relationships for frontend
+      
         $user->load(['role', 'household']);
         $user->token = $token;
         return $user;
@@ -33,7 +33,7 @@ class AuthService
         $user->save();
 
         $token = Auth::guard('api')->login($user);
-        // Load role and household relationships for frontend
+        
         $user->load(['role', 'household']);
         $user->token = $token;
         return $user;
@@ -49,7 +49,6 @@ class AuthService
     {
         $user = Auth::guard('api')->user();
         $token = Auth::guard('api')->refresh();
-        // Load role and household relationships for frontend
         $user->load(['role', 'household']);
         $user->token = $token;
         return $user;
@@ -58,7 +57,7 @@ class AuthService
     function me()
     {
         $user = Auth::guard('api')->user();
-        // Load role and household relationships for frontend
+        
         if ($user) {
             $user->load(['role', 'household']);
         }

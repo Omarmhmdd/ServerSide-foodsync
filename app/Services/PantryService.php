@@ -18,8 +18,7 @@ class PantryService
 
     function create($householdId, $data)
     {
-        // Check if an identical inventory item already exists
-        // (same ingredient, expiry date, location, and unit)
+        
         $existing = Inventory::where('household_id', $householdId)
             ->where('ingredient_id', $data['ingredient_id'])
             ->where('unit_id', $data['unit_id'])
@@ -28,14 +27,14 @@ class PantryService
             ->first();
 
         if ($existing) {
-            // Merge: Add the new quantity to existing item
+           
             $existing->quantity += $data['quantity'];
             $existing->save();
             $existing->load(['ingredient', 'unit']);
             return $existing;
         }
 
-        // Create new inventory item if no duplicate found
+        
         $inventory = new Inventory;
         $inventory->ingredient_id = $data['ingredient_id'];
         $inventory->quantity = $data['quantity'];
@@ -169,7 +168,7 @@ class PantryService
 
     function mergeDuplicates($householdId)
     {
-        // Get all inventory items grouped by ingredient, expiry, location, and unit
+    
         $items = Inventory::where('household_id', $householdId)
             ->orderBy('ingredient_id')
             ->orderBy('expiry_date')
@@ -190,17 +189,17 @@ class PantryService
             );
 
             if (!isset($merged[$key])) {
-                // First occurrence - keep this one
+                
                 $merged[$key] = $item;
             } else {
-                // Duplicate found - merge quantities
+                
                 $merged[$key]->quantity += $item->quantity;
                 $merged[$key]->save();
                 $toDelete[] = $item->id;
             }
         }
 
-        // Delete duplicate items
+        
         if (!empty($toDelete)) {
             Inventory::whereIn('id', $toDelete)->delete();
         }

@@ -62,11 +62,7 @@ class IngredientController extends Controller
         }
 
         $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
+            'name' => [ 'required', 'string','max:255',],
             'calories' => 'nullable|numeric|min:0',
             'protein' => 'nullable|numeric|min:0',
             'carbs' => 'nullable|numeric|min:0',
@@ -74,24 +70,23 @@ class IngredientController extends Controller
             'unit_id' => 'nullable|exists:units,id',
         ]);
 
-        // Check if ingredient already exists (idempotent operation)
+    
         $existingIngredient = Ingredient::where('name', $request->name)
             ->where('household_id', $user->household_id)
             ->first();
 
         if ($existingIngredient) {
-            // If unit_id is provided and different, update it
+     
             if ($request->has('unit_id') && $request->unit_id != $existingIngredient->unit_id) {
                 $existingIngredient->unit_id = $request->unit_id;
                 $existingIngredient->save();
             }
             
-            // Load unit relationship and return existing ingredient
+      
             $existingIngredient->load('unit');
             return $this->responseJSON($existingIngredient);
         }
 
-        // Create new ingredient if it doesn't exist
         $ingredient = $this->ingredientService->create($user->household_id, $request->all());
         return $this->responseJSON($ingredient);
     }

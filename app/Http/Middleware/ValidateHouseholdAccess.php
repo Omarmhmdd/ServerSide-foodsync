@@ -29,12 +29,12 @@ class ValidateHouseholdAccess
             ], 400);
         }
 
-        // Get household_id from route parameters or request body
+        
         $householdId = $request->route('householdId') 
             ?? $request->input('household_id')
-            ?? $request->route('id'); // Some routes use 'id' for household resources
+            ?? $request->route('id'); 
 
-        // If household_id is provided, validate it matches user's household
+        
         if ($householdId && $householdId != $user->household_id) {
             return response()->json([
                 "status" => "failure",
@@ -43,12 +43,7 @@ class ValidateHouseholdAccess
             ], 403);
         }
 
-        // For resources that have household_id in their model (like Inventory, Recipe, etc.)
-        // The controller should validate this, but we can add an extra layer here
-        // by checking if the resource ID belongs to the user's household
         
-        // This is a general check - specific resource validation should be done in controllers
-        // where we can check the actual model's household_id
 
         return $next($request);
     }

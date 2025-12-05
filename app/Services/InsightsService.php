@@ -21,7 +21,7 @@ class InsightsService
         $startDate = Carbon::parse($weekStartDate)->startOfWeek();
         $endDate = $startDate->copy()->endOfWeek();
 
-        // Expenses
+        
         $expenses = Expense::where('household_id', $householdId)
             ->whereBetween('date', [$startDate, $endDate])
             ->get();
@@ -32,7 +32,7 @@ class InsightsService
             return $items->sum('amount');
         });
 
-        // Waste (expired items)
+                        
         $expiredItems = Inventory::with('ingredient')
             ->where('household_id', $householdId)
             ->whereNotNull('expiry_date')

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('quantity', 10, 2);
             $table->foreignId('unit_id')->constrained('units')->onDelete('restrict');
             $table->date('expiry_date')->nullable();
-            $table->string('location')->nullable(); // e.g., 'Fridge', 'Pantry', 'Freezer'
+            $table->string('location')->nullable(); 
             $table->foreignId('household_id')->constrained('households')->onDelete('cascade');
             $table->timestamps();
             

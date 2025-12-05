@@ -67,7 +67,7 @@ class AuthController extends Controller
 
     public function getAllUsers()
     {
-        // Get all users with their roles and household information
+        
         $users = \App\Models\User::with(['role', 'household'])
             ->select('id', 'name', 'email', 'user_role_id', 'household_id', 'created_at')
             ->get()

@@ -36,7 +36,7 @@ class RecipeController extends Controller
             ->first();
         
         if (!$unit) {
-            // Create unit if it doesn't exist
+            
             $unitNameMap = [
                 'g' => 'Gram',
                 'kg' => 'Kilogram',
@@ -89,7 +89,7 @@ class RecipeController extends Controller
             return $this->responseJSON(null, "failure", 404);
         }
 
-        // Validate basic recipe fields first
+       
         $request->validate([
             'title' => 'required|string|max:255',
             'instructions' => 'required|string',
@@ -101,25 +101,24 @@ class RecipeController extends Controller
             'ingredients.*.quantity' => 'required|numeric|min:0',
         ]);
 
-        // Process ingredients: accept either ingredient_id or ingredient name
+       
         $processedIngredients = [];
         if ($request->has('ingredients') && is_array($request->ingredients)) {
             foreach ($request->ingredients as $index => $ingredient) {
                 $ingredientId = null;
                 
-                // Accept either ingredient_id or ingredient name
+               
                 if (isset($ingredient['ingredient_id'])) {
                     $ingredientId = $ingredient['ingredient_id'];
                 } elseif (isset($ingredient['ingredient']) || isset($ingredient['name'])) {
-                    // Look up ingredient by name, or create it if it doesn't exist
+              
                     $ingredientName = $ingredient['ingredient'] ?? $ingredient['name'];
                     $foundIngredient = Ingredient::where('name', $ingredientName)
                         ->where('household_id', $user->household_id)
                         ->first();
                     
                     if (!$foundIngredient) {
-                        // Auto-create ingredient if it doesn't exist
-                        // First, get or create the unit
+                       
                         $unitId = null;
                         if (isset($ingredient['unit_id'])) {
                             $unitId = $ingredient['unit_id'];
@@ -127,7 +126,7 @@ class RecipeController extends Controller
                             $unit = $this->findOrCreateUnit($ingredient['unit']);
                             $unitId = $unit->id;
                         } else {
-                            // Default to 'g' (Gram) if no unit specified
+                           
                             $unit = $this->findOrCreateUnit('g');
                             $unitId = $unit->id;
                         }
@@ -147,27 +146,27 @@ class RecipeController extends Controller
                     ], 422);
                 }
 
-                // Get unit_id: use provided one, or find/create by abbreviation, or fall back to ingredient's default unit_id
+                
                 $unitId = null;
                 if (isset($ingredient['unit_id'])) {
                     $unitId = $ingredient['unit_id'];
                 } elseif (isset($ingredient['unit'])) {
-                    // Try to find unit by abbreviation
+                   
                     $unit = $this->findOrCreateUnit($ingredient['unit']);
                     $unitId = $unit->id;
                 } else {
-                    // Try to get the ingredient's default unit_id
+                   
                     $ingredientModel = Ingredient::find($ingredientId);
                     if ($ingredientModel && $ingredientModel->unit_id) {
                         $unitId = $ingredientModel->unit_id;
                     } else {
-                        // Default to 'g' (Gram) if no unit specified
+                       
                         $unit = $this->findOrCreateUnit('g');
                         $unitId = $unit->id;
                     }
                 }
 
-                // Verify ingredient belongs to household (should always be true since we just created it if needed)
+                
                 $ingredientExists = Ingredient::where('id', $ingredientId)
                     ->where('household_id', $user->household_id)
                     ->exists();
@@ -180,7 +179,7 @@ class RecipeController extends Controller
                     ], 422);
                 }
 
-                // Verify unit exists (should always be true since we just created it if needed)
+           
                 $unitExists = Unit::where('id', $unitId)->exists();
                 if (!$unitExists) {
                     return response()->json([
@@ -198,7 +197,6 @@ class RecipeController extends Controller
             }
         }
 
-        // Replace ingredients array with processed one
         $requestData = $request->all();
         $requestData['ingredients'] = $processedIngredients;
 
@@ -232,25 +230,24 @@ class RecipeController extends Controller
             'ingredients' => 'nullable|array',
         ]);
 
-        // Process ingredients: accept either ingredient_id or ingredient name
+        
         $processedIngredients = [];
         if ($request->has('ingredients') && is_array($request->ingredients)) {
             foreach ($request->ingredients as $index => $ingredient) {
                 $ingredientId = null;
                 
-                // Accept either ingredient_id or ingredient name
+              
                 if (isset($ingredient['ingredient_id'])) {
                     $ingredientId = $ingredient['ingredient_id'];
                 } elseif (isset($ingredient['ingredient']) || isset($ingredient['name'])) {
-                    // Look up ingredient by name, or create it if it doesn't exist
+                 
                     $ingredientName = $ingredient['ingredient'] ?? $ingredient['name'];
                     $foundIngredient = Ingredient::where('name', $ingredientName)
                         ->where('household_id', $user->household_id)
                         ->first();
                     
                     if (!$foundIngredient) {
-                        // Auto-create ingredient if it doesn't exist
-                        // First, get or create the unit
+                       
                         $unitId = null;
                         if (isset($ingredient['unit_id'])) {
                             $unitId = $ingredient['unit_id'];
@@ -258,12 +255,12 @@ class RecipeController extends Controller
                             $unit = $this->findOrCreateUnit($ingredient['unit']);
                             $unitId = $unit->id;
                         } else {
-                            // Default to 'g' (Gram) if no unit specified
+                          
                             $unit = $this->findOrCreateUnit('g');
                             $unitId = $unit->id;
                         }
                         
-                        // Create the ingredient
+                   
                         $foundIngredient = $this->ingredientService->create($user->household_id, [
                             'name' => $ingredientName,
                             'unit_id' => $unitId,
@@ -278,27 +275,27 @@ class RecipeController extends Controller
                     ], 422);
                 }
 
-                // Get unit_id: use provided one, or find/create by abbreviation, or fall back to ingredient's default unit_id
+                
                 $unitId = null;
                 if (isset($ingredient['unit_id'])) {
                     $unitId = $ingredient['unit_id'];
                 } elseif (isset($ingredient['unit'])) {
-                    // Try to find unit by abbreviation
+                
                     $unit = $this->findOrCreateUnit($ingredient['unit']);
                     $unitId = $unit->id;
                 } else {
-                    // Try to get the ingredient's default unit_id
+                   
                     $ingredientModel = Ingredient::find($ingredientId);
                     if ($ingredientModel && $ingredientModel->unit_id) {
                         $unitId = $ingredientModel->unit_id;
                     } else {
-                        // Default to 'g' (Gram) if no unit specified
+                    
                         $unit = $this->findOrCreateUnit('g');
                         $unitId = $unit->id;
                     }
                 }
 
-                // Verify ingredient belongs to household (should always be true since we just created it if needed)
+                
                 $ingredientExists = Ingredient::where('id', $ingredientId)
                     ->where('household_id', $user->household_id)
                     ->exists();
@@ -311,7 +308,7 @@ class RecipeController extends Controller
                     ], 422);
                 }
 
-                // Verify unit exists (should always be true since we just created it if needed)
+               
                 $unitExists = Unit::where('id', $unitId)->exists();
                 if (!$unitExists) {
                     return response()->json([
@@ -329,7 +326,6 @@ class RecipeController extends Controller
             }
         }
 
-        // Replace ingredients array with processed one
         $requestData = $request->all();
         if (!empty($processedIngredients)) {
             $requestData['ingredients'] = $processedIngredients;
@@ -388,17 +384,17 @@ class RecipeController extends Controller
             return $this->responseJSON([], "failure", 404);
         }
 
-        // Get all recipe ingredients
+        
         $recipeIngredientIds = $recipe->ingredients->pluck('id')->toArray();
         
-        // Get pantry ingredients
+        
         $pantryIngredientIds = \App\Models\Inventory::where('household_id', $user->household_id)
             ->where('quantity', '>', 0)
             ->pluck('ingredient_id')
             ->unique()
             ->toArray();
 
-        // Find missing ingredients
+      
         $missingIngredientIds = array_diff($recipeIngredientIds, $pantryIngredientIds);
         
         $substitutions = [];

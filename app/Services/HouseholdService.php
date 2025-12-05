@@ -24,7 +24,7 @@ class HouseholdService
         $household = new Household;
         $household->name = $name;
         $household->save();
-
+        
         $user = User::find($userId);
         $user->household_id = $household->id;
         $user->save();

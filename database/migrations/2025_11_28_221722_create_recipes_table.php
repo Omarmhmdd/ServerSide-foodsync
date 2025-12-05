@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('instructions');
-            $table->json('tags')->nullable(); // ['vegetarian', 'quick', 'dinner', etc.]
+            $table->json('tags')->nullable(); 
             $table->integer('servings')->nullable();
-            $table->integer('prep_time')->nullable(); // minutes
-            $table->integer('cook_time')->nullable(); // minutes
+            $table->integer('prep_time')->nullable(); 
+            $table->integer('cook_time')->nullable(); 
             $table->foreignId('household_id')->nullable()->constrained('households')->onDelete('cascade');
             $table->timestamps();
         });

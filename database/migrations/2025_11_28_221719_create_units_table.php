@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique(); // 'kg', 'g', 'L', 'mL', 'cup', 'tbsp', etc.
-            $table->string('abbreviation')->nullable(); // 'kg', 'g', 'L', etc.
+            $table->string('name')->unique(); 
+            $table->string('abbreviation')->nullable(); 
             $table->timestamps();
         });
     }
