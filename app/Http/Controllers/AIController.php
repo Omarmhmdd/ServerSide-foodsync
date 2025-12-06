@@ -44,9 +44,7 @@ class AIController extends Controller
         $this->pantryService = $pantryService;
     }
 
-    /**
-     * Generate seed data using AI
-     */
+   
     function generateSeedData(Request $request)
     {
         $user = Auth::user();
@@ -56,7 +54,7 @@ class AIController extends Controller
 
         $householdId = $user->household_id;
 
-        // Get AI-generated seed data
+        
         $seedData = $this->aiService->generateSeedData($householdId);
 
         $created = [
@@ -65,7 +63,6 @@ class AIController extends Controller
             'pantry_items' => 0,
         ];
 
-        // Create ingredients with nutrition
         foreach ($seedData['ingredients'] ?? [] as $ingredientData) {
             try {
                 // Find or create unit

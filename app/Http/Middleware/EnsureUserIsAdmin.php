@@ -29,7 +29,7 @@ class EnsureUserIsAdmin
             ], 401);
         }
 
-        // Check if user has admin role
+        
         if (!$user->isAdmin()) {
             return response()->json([
                 "status" => "failure",

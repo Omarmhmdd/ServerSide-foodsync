@@ -43,8 +43,7 @@ class HouseholdService
     {
         $invite = HouseholdInvite::where('code', $code)
             ->where(function ($query) {
-                $query->whereNull('expires_at')
-                    ->orWhere('expires_at', '>', now());
+                $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
             })
             ->first();
 

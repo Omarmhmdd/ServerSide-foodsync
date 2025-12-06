@@ -49,7 +49,7 @@ class InsightsService
             ];
         });
 
-        // Planning (meals planned)
+        // Planning meals 
         $week = Week::with('meals')->where('household_id', $householdId)
             ->where('start_date', $startDate->toDateString())
             ->first();
@@ -69,7 +69,7 @@ class InsightsService
             }
         }
 
-        // Expiring soon (next 7 days)
+        
         $expiringSoon = Inventory::with('ingredient')
             ->where('household_id', $householdId)
             ->whereNotNull('expiry_date')
