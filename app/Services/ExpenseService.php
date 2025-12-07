@@ -45,7 +45,7 @@ class ExpenseService
         if (!$expense) {
             return null;
         }
-
+ echo "A";
         if (isset($data['store'])) {
             $expense->store = $data['store'];
         }
