@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('household_id')->constrained('households')->onDelete('cascade');
             $table->string('store')->nullable();
-            $table->string('receipt_link')->nullable(); // URL or file path
+            $table->string('receipt_link')->nullable(); 
             $table->decimal('amount', 10, 2);
             $table->date('date');
-            $table->string('category')->nullable(); // 'groceries', 'dining', 'snacks', etc.
+            $table->string('category')->nullable(); 
             $table->text('note')->nullable();
             $table->timestamps();
             

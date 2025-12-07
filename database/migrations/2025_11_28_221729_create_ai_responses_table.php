@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('json_input');
             $table->text('json_output');
-            $table->string('type')->nullable(); // 'recipe_suggestion', 'substitution', 'weekly_insights', etc.
+            $table->string('type')->nullable(); 
             $table->foreignId('household_id')->constrained('households')->onDelete('cascade');
             $table->timestamps();
             

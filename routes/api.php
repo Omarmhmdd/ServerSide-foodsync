@@ -143,6 +143,8 @@ Route::prefix('v0.1')->group(function () {
         Route::get('/substitutions/{ingredientId}', [AIController::class, 'getSmartSubstitutions']);
     });
 
-   
+
+    Route::get('/expiring-public', [PantryController::class, 'getExpiringSoonPublic']);
+
 });
 

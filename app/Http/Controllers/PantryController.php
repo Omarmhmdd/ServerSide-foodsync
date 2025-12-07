@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\PantryService;
+
 
 class PantryController extends Controller
 {
@@ -64,7 +66,7 @@ class PantryController extends Controller
             ], 400);
         }
 
-        // Get the inventory item to access its ingredient_id
+        
         $inventory = \App\Models\Inventory::where('id', $id)
             ->where('household_id', $user->household_id)
             ->first();
@@ -73,7 +75,7 @@ class PantryController extends Controller
             return $this->responseJSON(null, "failure", 404);
         }
 
-        // Validate with unique ingredient name check (ignore current ingredient)
+        
         $ingredientName = $request->input('ingredient_name') ?? $request->input('name');
         $validationRules = [
             'quantity' => 'nullable|numeric|min:0',
@@ -88,12 +90,9 @@ class PantryController extends Controller
             'fat' => 'nullable|numeric|min:0',
         ];
 
-        // If ingredient name is being updated, validate uniqueness
+        
         if ($ingredientName) {
-            $validationRules['ingredient_name'] = [
-                'nullable',
-                'string',
-                'max:255',
+            $validationRules['ingredient_name'] = ['nullable','string', 'max:255',
                 \Illuminate\Validation\Rule::unique('ingredients', 'name')
                     ->where('household_id', $user->household_id)
                     ->ignore($inventory->ingredient_id)
@@ -131,7 +130,7 @@ class PantryController extends Controller
             ], 400);
         }
 
-        // Validate that ID is numeric
+        
         if (!is_numeric($id)) {
             return $this->responseJSON(null, "failure", 400);
         }
@@ -179,7 +178,7 @@ class PantryController extends Controller
         $days = (int) $request->get('days', 7);
         $inventory = $this->pantryService->getExpiringSoon($user->household_id, $days);
         
-        // Add "use first" badge logic (items expiring in 1-2 days get priority)
+        
         $items = $inventory->map(function ($item) {
             if (!$item->expiry_date) {
                 return $item;
@@ -239,5 +238,11 @@ class PantryController extends Controller
         $result = $this->pantryService->mergeDuplicates($user->household_id);
         return $this->responseJSON($result, "success");
     }
+    public function getExpiringSoonPublic()
+{
+    return Inventory::whereDate('expiry_date', '<=', now()->addDays(3))
+        ->orderBy('expiry_date')
+        ->get();
+}
 }
 

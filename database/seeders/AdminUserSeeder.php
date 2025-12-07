@@ -15,22 +15,21 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ensure admin role exists
+        
         $adminRole = UserRole::firstOrCreate(['role' => 'admin']);
 
-        // Create admin user if it doesn't exist
         User::firstOrCreate(
             ['email' => 'admin@homelife.com'],
             [
                 'name' => 'Admin User',
                 'email' => 'admin@homelife.com',
-                'password' => Hash::make('admin123'), // Change this password in production!
+                'password' => Hash::make('admin123'), 
                 'user_role_id' => $adminRole->id,
             ]
         );
 
         $this->command->info('Admin user created: admin@homelife.com / admin123');
-        $this->command->warn('⚠️  Please change the default password in production!');
+        $this->command->warn(' Please change the default password in production!');
     }
 }
 

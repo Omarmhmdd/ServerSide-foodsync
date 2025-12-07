@@ -24,7 +24,7 @@ class HouseholdService
         $household = new Household;
         $household->name = $name;
         $household->save();
-
+        
         $user = User::find($userId);
         $user->household_id = $household->id;
         $user->save();
@@ -43,8 +43,7 @@ class HouseholdService
     {
         $invite = HouseholdInvite::where('code', $code)
             ->where(function ($query) {
-                $query->whereNull('expires_at')
-                    ->orWhere('expires_at', '>', now());
+                $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
             })
             ->first();
 

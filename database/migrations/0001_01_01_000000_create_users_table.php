@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            // Match the original project: define plain unsigned big integers here,
-            // and add the foreign key constraints in a later migration.
             $table->unsignedBigInteger('user_role_id')->nullable();
             $table->string('name');
             $table->string('email')->unique();
