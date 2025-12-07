@@ -163,6 +163,7 @@ class PantryService
         ->where('quantity', '>', 0) 
          ->orderBy('expiry_date', 'asc')
         ->get();
+        
     }
 
     function mergeDuplicates($householdId)
